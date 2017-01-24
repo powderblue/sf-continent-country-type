@@ -1,0 +1,10 @@
+services:
+    powder_blue_sf_continent_country_type.continent_country_csv_file_provider:
+        class: PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryCSVFileProvider
+        arguments:
+            - "@request_stack"
+
+    powder_blue_sf_continent_country_type.form.type.continent_country:
+        class: PowderBlue\SfContinentCountryTypeBundle\Form\Type\ContinentCountryType
+        tags:
+            - { name: form.type }
