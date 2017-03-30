@@ -14,15 +14,13 @@ class ContinentCountryType extends AbstractType
 
     /** @var bool */
     protected $groupByContinent;
-    
+
     /**
      * @param ContinentCountryProviderInterface $provider
      * @param bool                              $groupByContinent
      */
-    public function __construct(
-        ContinentCountryProviderInterface $provider,
-        $groupByContinent
-    ) {
+    public function __construct(ContinentCountryProviderInterface $provider, $groupByContinent)
+    {
         $this->provider = $provider;
         $this->groupByContinent = $groupByContinent;
     }
@@ -32,14 +30,22 @@ class ContinentCountryType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $choices = [];
+
+        if ($this->groupByContinent) {
+            foreach ($this->provider->getContinents() as $name => $countries) {
+                $choices[$name] = array_flip($countries);
+            }
+        } else {
+            $choices = array_flip($this->provider->getCountries());
+        }
+
         $resolver->setDefaults([
-            'choices' => $this->groupByContinent
-                ? $this->provider->getContinents()
-                : $this->provider->getCountries(),
-            'choices_as_values' => false,
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
-    
+
     /**
      * @return string
      */
