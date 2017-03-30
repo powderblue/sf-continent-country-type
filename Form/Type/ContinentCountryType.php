@@ -4,7 +4,7 @@ namespace PowderBlue\SfContinentCountryTypeBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface;
 
 class ContinentCountryType extends AbstractType
@@ -51,6 +51,6 @@ class ContinentCountryType extends AbstractType
      */
     public function getParent()
     {
-        return CountryType::class;
+        return ChoiceType::class;
     }
 }

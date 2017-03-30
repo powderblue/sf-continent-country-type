@@ -1,10 +1,8 @@
 # sf-continent-country-type
 
-
 ## Introduction
 
-This is a Symfony2 bundle which provides a new form type called *ContinentCountryType*. This type extends Symfony's *CountryType* and allows developers to group countries by continents. It also give developers the possibility to define the countries and the continents that need to be used.
-
+This is a Symfony2 bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
 
 ## Screenshots
 
@@ -14,12 +12,12 @@ Example of a dropdown with countries grouped by continent:
 Example of a simple country dropdown:
 ![simple country dropdown](Resources/doc/img/not-grouped.png)
 
-*Note that Select2 library is applied on the select list in the examples above.*
+*Note: the *Select2* *jQuery* plugin has been applied to the above lists.*
 
 ## Installation
 
 * Run `composer require powderblue/sf-continent-country-type`
-* Update you project `app/AppKernel.php` file and add the bundle to the `$bundles` array:
+* Update your project `app/AppKernel.php` file and add the bundle to the `$bundles` array:
 ```php
 $bundles = [
     // ...
@@ -27,10 +25,9 @@ $bundles = [
 ];
 ```
 
-
 ## How to use
 
-In the `buildForm` method of a form type class, specify `ContinentCountryType::class` as the type. Don't forget to include the form type class:
+In the `buildForm` method of a form-type class, specify `ContinentCountryType::class` as the type. Don't forget to include the form type class:
 ```php
 use PowderBlue\SfContinentCountryTypeBundle\Form\Type\ContinentCountryType;
 ```
@@ -48,7 +45,6 @@ $builder
 ;
 ```
 
-
 ## Configuration
 
 Below you can find a reference of all configuration options with their default values:
@@ -60,9 +56,8 @@ powder_blue_sf_continent_country_type:
     provider: powder_blue_sf_continent_country_type.provider.continent_country_csv_file
 ```
 
-
 ### Options
 
-- `file` - specifies the path of the file that contains countries (and continents) which should appear in the dropdown
+- `file` - specifies the path of the file that contains countries (and continents) that should appear in the dropdown
 - `group_by_continent` - specifies whether the countries should be grouped by continent in the dropdown
-- `provider` - represents the id of the service that is used to parse the countries file; it should implement `PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface` interface
+- `provider` - represents the ID of the service that is used to parse the countries file; it should implement the `PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface` interface
