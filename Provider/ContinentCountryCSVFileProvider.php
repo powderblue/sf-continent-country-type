@@ -6,8 +6,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Data\Bundle\Reader\BundleEntryReader;
 use Symfony\Component\Intl\Data\Bundle\Reader\JsonBundleReader;
 use Symfony\Component\Intl\Intl;
-use Symfony\Component\Intl\ResourceBundle\RegionBundleInterface;
-use Symfony\Component\Intl\Locale\Locale;
 
 class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterface
 {
@@ -15,20 +13,70 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
     protected $requestStack;
 
     /** @var string */
-    protected $file;
+    protected $filename;
 
-    /** @var RegionBundleInterface */
-    protected $regionBundle;
+    /** @var string */
+    protected $locale;
+
+    /** @var array */
+    protected $continentCountries;
 
     /**
      * @param RequestStack $requestStack
-     * @param string       $file
+     * @param string       $filename
      */
-    public function __construct(RequestStack $requestStack, $file)
+    public function __construct(RequestStack $requestStack, $filename)
     {
         $this->requestStack = $requestStack;
-        $this->file = $file;
-        $this->regionBundle = Intl::getRegionBundle();
+        $this->filename = $filename;
+
+        $this->locale = $this->requestStack->getCurrentRequest()->getLocale();
+        $this->continentCountries = null;
+    }
+
+    /**
+     * @param array $countries
+     * @return array
+     */
+    private function sortCountries($countries)
+    {
+        asort($countries);
+        return $countries;
+    }
+
+    /**
+     * @return array
+     * @throws \RuntimeException If it failed to open the continent-countries file.
+     */
+    private function getContinentCountries()
+    {
+        if (null === $this->continentCountries) {
+            $handle = fopen($this->filename, 'r');
+
+            if (false === $handle) {
+                throw new \RuntimeException("Failed to open '{$this->filename}'.");
+            }
+
+            $this->continentCountries = [];
+
+            while (false !== ($record = fgetcsv($handle, 1000))) {
+                $continentCode = $record[1];
+
+                if (!array_key_exists($continentCode, $this->continentCountries)) {
+                    $this->continentCountries[$continentCode] = [];
+                }
+
+                $countryCode = $record[0];
+
+                $this->continentCountries[$continentCode][$countryCode] = Intl::getRegionBundle()
+                    ->getCountryName($countryCode)
+                ;
+            }
+
+            fclose($handle);
+        }
+
+        return $this->continentCountries;
     }
 
     /**
@@ -38,11 +86,11 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
     {
         $countries = [];
 
-        foreach ($this->getRows() as $row) {
-            $countries[$row[0]] = $this->regionBundle->getCountryName($row[0]);
+        foreach ($this->getContinentCountries() as $continentCountries) {
+            $countries = array_merge($countries, $continentCountries);
         }
 
-        return $countries;
+        return $this->sortCountries($countries);
     }
 
     /**
@@ -50,40 +98,21 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
      */
     public function getContinents()
     {
-        $reader = new BundleEntryReader(new JsonBundleReader());
-        $locale = $this->requestStack->getCurrentRequest()->getLocale();
+        $bundleEntryReader = new BundleEntryReader(new JsonBundleReader());
         $continents = [];
 
-        foreach ($this->getRows() as $row) {
-            $continent = $reader->readEntry(
-                sprintf('%s/../Resources/translations/continents', __DIR__),
-                $locale,
-                ['Names', $row[1]]
+        foreach ($this->getContinentCountries() as $continentCode => $continentCountries) {
+            $continentName = $bundleEntryReader->readEntry(
+                __DIR__ . '/../Resources/translations/continents',
+                $this->locale,
+                ['Names', $continentCode]
             );
-            if (!array_key_exists($continent, $continents)) {
-                $continents[$continent] = [];
-            }
 
-            $continents[$continent][$row[0]] = $this->regionBundle->getCountryName($row[0]);
+            $continents[$continentName] = $this->sortCountries($continentCountries);
         }
+
+        ksort($continents);
 
         return $continents;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRows()
-    {
-        $rows = [];
-
-        if (($handle = fopen($this->file, 'r')) !== false) {
-            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                $rows[] = $row;
-            }
-            fclose($handle);
-        }
-
-        return $rows;
     }
 }
