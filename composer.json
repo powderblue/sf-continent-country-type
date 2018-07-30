@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "symfony/symfony": "3.2.*"
+        "symfony/flex": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.3",
@@ -24,5 +24,10 @@
             "phpunit -c .",
             "phpcs -p --standard=PSR2 --ignore=vendor/ ."
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "2.1.x-dev"
+        }
     }
 }
