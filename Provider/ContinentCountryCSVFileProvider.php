@@ -102,15 +102,14 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
         $continents = [];
 
         foreach ($this->getContinentCountries() as $continentCode => $continentCountries) {
+
             $continentName = $bundleEntryReader->readEntry(
                 __DIR__ . '/../Resources/translations/continents',
                 $this->locale,
                 ['Names', $continentCode]
             );
-
             $continents[$continentName] = $this->sortCountries($continentCountries);
         }
-
         ksort($continents);
 
         return $continents;

@@ -34,15 +34,16 @@ class ContinentCountryType extends AbstractType
 
         if ($this->groupByContinent) {
             foreach ($this->provider->getContinents() as $name => $countries) {
-                $choices[$name] = array_flip($countries);
+                // $choices[$name] = array_flip($countries);
+                $choices[$name] = $this->flipCountries($countries);;
             }
         } else {
-            $choices = array_flip($this->provider->getCountries());
+            $choices = $this->flipCountries($this->provider->getCountries());
         }
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'choices_as_values' => true,
+            // 'choices_as_values' => true,
         ]);
     }
 
@@ -52,5 +53,16 @@ class ContinentCountryType extends AbstractType
     public function getParent()
     {
         return ChoiceType::class;
+    }
+
+    private function flipCountries($countries)
+    {
+        $flippedCountries = [];
+        foreach ($countries as $iso => $country) {
+            if (!empty($country)) {
+                $flippedCountries[$country] = $iso;
+            }
+        }
+        return $flippedCountries;
     }
 }
