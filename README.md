@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a Symfony 3 bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
+This is a Symfony 3/4/Flex bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
 
 ## Screenshots
 
@@ -17,7 +17,7 @@ Example of a simple country dropdown:
 ## Installation
 
 * Run `composer require powderblue/sf-continent-country-type`
-* Update your project `app/AppKernel.php` file and add the bundle to the `$bundles` array:
+* *(Non Flex Project)* Update your project `app/AppKernel.php` file and add the bundle to the `$bundles` array:
 ```php
 $bundles = [
     // ...
@@ -48,15 +48,25 @@ $builder
 ## Configuration
 
 Below you can find a reference of all configuration options with their default values:
+### Flex Project
 ```yml
-# config.yml
+# config/packages/powder_blue_sf_continent_country_type.yaml 
+powder_blue_sf_continent_country_type:
+    file: '%bundle_root_dir%/Resources/data/continent_country.csv'
+    group_by_continent: true
+    provider: powder_blue_sf_continent_country_type.provider.continent_country_csv_file
+```
+
+### Non Flex Project
+```yml
+# config.yml 
 powder_blue_sf_continent_country_type:
     file: %bundle_root_dir%/Resources/data/continent_country.csv
     group_by_continent: true
     provider: powder_blue_sf_continent_country_type.provider.continent_country_csv_file
 ```
 
-### Options
+#### Options
 
 - `file` - specifies the path of the file that contains countries (and continents) that should appear in the dropdown
 - `group_by_continent` - specifies whether the countries should be grouped by continent in the dropdown
