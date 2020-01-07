@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "symfony/symfony": "~3.4.36"
+        "symfony/symfony": "~3.4.36|^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.3",
