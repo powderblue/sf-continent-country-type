@@ -4,16 +4,23 @@ namespace PowderBlue\SfContinentCountryTypeBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 class Configuration implements ConfigurationInterface
 {
+    private const ROOT_NAME = 'powder_blue_sf_continent_country_type';
+
     /**
      * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('powder_blue_sf_continent_country_type');
+        $treeBuilder = new TreeBuilder(self::ROOT_NAME);
+
+        $rootNode = Kernel::VERSION > 4.2
+            ? $treeBuilder->getRootNode()
+            : $treeBuilder->root(self::ROOT_NAME)
+        ;
 
         $rootNode
             ->addDefaultsIfNotSet()

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a Symfony 3/4 bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
+This is a Symfony 3/4/5 bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
 
 ## Screenshots
 
