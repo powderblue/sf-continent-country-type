@@ -1,76 +1,88 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PowderBlue\SfContinentCountryTypeBundle\Provider;
 
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Data\Bundle\Reader\BundleEntryReader;
 use Symfony\Component\Intl\Data\Bundle\Reader\JsonBundleReader;
-use Symfony\Component\Intl\Intl;
 
+use function array_key_exists;
+use function array_merge;
+use function asort;
+use function fclose;
+use function fgetcsv;
+use function fopen;
+use function ksort;
+
+use const false;
+
+/**
+ * @phpstan-import-type Countries from \PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface as CountriesArray
+ * @phpstan-import-type Continents from \PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface as ContinentsArray
+ */
 class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterface
 {
-    /** @var RequestStack */
-    protected $requestStack;
-
-    /** @var string */
-    protected $filename;
-
-    /** @var string */
-    protected $locale;
-
-    /** @var array */
-    protected $continentCountries;
+    protected string $locale;
 
     /**
-     * @param RequestStack $requestStack
-     * @param string       $filename
+     * Lazy-loaded
+     *
+     * @phpstan-var ContinentsArray
      */
-    public function __construct(RequestStack $requestStack, $filename)
-    {
-        $this->requestStack = $requestStack;
-        $this->filename = $filename;
+    protected array $continentCountries;
 
-        $this->locale = $this->requestStack->getCurrentRequest()->getLocale();
-        $this->continentCountries = null;
+    public function __construct(
+        protected RequestStack $requestStack,
+        protected string $filename
+    ) {
+        /** @var Request */
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        $this->locale = $currentRequest->getLocale();
     }
 
     /**
-     * @param array $countries
-     * @return array
+     * @phpstan-param CountriesArray $countries
+     * @phpstan-return CountriesArray
      */
-    private function sortCountries($countries)
+    private function sortCountries(array $countries): array
     {
         asort($countries);
+
         return $countries;
     }
 
     /**
-     * @return array
-     * @throws \RuntimeException If it failed to open the continent-countries file.
+     * @phpstan-return ContinentsArray
+     * @throws RuntimeException If it failed to open the continent-countries file.
      */
     private function getContinentCountries()
     {
-        if (null === $this->continentCountries) {
+        if (!isset($this->continentCountries)) {
             $handle = fopen($this->filename, 'r');
 
             if (false === $handle) {
-                throw new \RuntimeException("Failed to open '{$this->filename}'.");
+                throw new RuntimeException("Failed to open '{$this->filename}'.");
             }
 
             $this->continentCountries = [];
 
             while (false !== ($record = fgetcsv($handle, 1000))) {
+                /** @var string */
                 $continentCode = $record[1];
 
                 if (!array_key_exists($continentCode, $this->continentCountries)) {
                     $this->continentCountries[$continentCode] = [];
                 }
 
+                /** @var string */
                 $countryCode = $record[0];
 
-                $this->continentCountries[$continentCode][$countryCode] = Intl::getRegionBundle()
-                    ->getCountryName($countryCode)
-                ;
+                $this->continentCountries[$continentCode][$countryCode] = Countries::getName($countryCode);
             }
 
             fclose($handle);
@@ -80,9 +92,9 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
     }
 
     /**
-     * @return array
+     * @phpstan-return CountriesArray
      */
-    public function getCountries()
+    public function getCountries(): array
     {
         $countries = [];
 
@@ -94,14 +106,15 @@ class ContinentCountryCSVFileProvider implements ContinentCountryProviderInterfa
     }
 
     /**
-     * @return array
+     * @phpstan-return ContinentsArray
      */
-    public function getContinents()
+    public function getContinents(): array
     {
         $bundleEntryReader = new BundleEntryReader(new JsonBundleReader());
         $continents = [];
 
         foreach ($this->getContinentCountries() as $continentCode => $continentCountries) {
+            /** @var string */
             $continentName = $bundleEntryReader->readEntry(
                 __DIR__ . '/../Resources/translations/continents',
                 $this->locale,

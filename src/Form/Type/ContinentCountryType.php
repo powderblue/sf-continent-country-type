@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PowderBlue\SfContinentCountryTypeBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -7,26 +9,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use PowderBlue\SfContinentCountryTypeBundle\Provider\ContinentCountryProviderInterface;
 
+use function array_flip;
+
+use const true;
+
 class ContinentCountryType extends AbstractType
 {
-    /** @var ContinentCountryProviderInterface */
-    protected $provider;
-
-    /** @var bool */
-    protected $groupByContinent;
-
-    /**
-     * @param ContinentCountryProviderInterface $provider
-     * @param bool                              $groupByContinent
-     */
-    public function __construct(ContinentCountryProviderInterface $provider, $groupByContinent)
-    {
-        $this->provider = $provider;
-        $this->groupByContinent = $groupByContinent;
+    public function __construct(
+        protected ContinentCountryProviderInterface $provider,
+        protected bool $groupByContinent
+    ) {
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

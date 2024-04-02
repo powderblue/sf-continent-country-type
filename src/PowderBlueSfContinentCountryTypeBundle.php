@@ -9,7 +9,7 @@ use PowderBlue\SfContinentCountryTypeBundle\DependencyInjection\Compiler\Compile
 class PowderBlueSfContinentCountryTypeBundle extends Bundle
 {
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function build(ContainerBuilder $container)
     {
