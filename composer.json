@@ -1,6 +1,8 @@
 {
     "name": "powderblue/sf-continent-country-type",
+    "description": "Symfony form-type that displays a list of the countries of the world grouped by continent",
     "type": "symfony-bundle",
+    "license": "MIT",
     "authors": [
         {
             "name": "Adrian Dumitrache",
@@ -13,20 +15,20 @@
         }
     },
     "require": {
-        "php": "^8.3",
-        "symfony/config": "^4.4|^5.4",
-        "symfony/dependency-injection": "^4.4|^5.4",
-        "symfony/form": "^4.4|^5.4",
-        "symfony/framework-bundle": "^4.4|^5.4",
-        "symfony/http-foundation": "^4.4|^5.4",
-        "symfony/http-kernel": "^4.4|^5.4",
-        "symfony/intl": "^4.4|^5.4",
-        "symfony/options-resolver": "^4.4|^5.4"
+        "php": "^8.2.23",
+        "symfony/config": "^5.4|^6.4",
+        "symfony/dependency-injection": "^5.4|^6.4",
+        "symfony/form": "^5.4|^6.4",
+        "symfony/framework-bundle": "^5.4|^6.4",
+        "symfony/http-foundation": "^5.4|^6.4",
+        "symfony/http-kernel": "^5.4|^6.4",
+        "symfony/intl": "^5.4|^6.4",
+        "symfony/options-resolver": "^5.4|^6.4"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.9.1",
-        "phpunit/phpunit": "^11.0",
-        "phpstan/phpstan": "^1.10"
+        "squizlabs/php_codesniffer": "^3.10.2",
+        "phpunit/phpunit": "^11.3.5",
+        "phpstan/phpstan": "^1.12.3"
     },
     "scripts": {
         "app:check-quality": [

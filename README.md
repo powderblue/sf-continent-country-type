@@ -1,18 +1,16 @@
 # sf-continent-country-type
 
-## Introduction
-
-This is a Symfony 4/5 bundle that provides a new form-type called "ContinentCountryType".  This type is like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
+A Symfony bundle that provides a new form-type called "ContinentCountryType".  It's like Symfony's `CountryType` but allows developers to group countries by continent.  The list of countries and continents that are displayed can be easily customised.
 
 ## Screenshots
 
+(Select2 has been used to render the dropdown lists in the following examples.)
+
 Example of a dropdown with countries grouped by continent:
-![dropdown with countries grouped by continent](Resources/doc/img/grouped.png)
+![dropdown with countries grouped by continent](src/Resources/doc/img/grouped.png)
 
 Example of a 'simple' country dropdown:
-![simple country dropdown](Resources/doc/img/not-grouped.png)
-
-*Note: In the examples, above, Select2 has been used to render the dropdown lists*
+![simple country dropdown](src/Resources/doc/img/not-grouped.png)
 
 ## Installation
 
@@ -26,7 +24,7 @@ $bundles = [
 ];
 ```
 
-## How to Use
+## Usage
 
 In the `buildForm` method of a form-type class, specify `ContinentCountryType::class` as the type.
 
